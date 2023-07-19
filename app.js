@@ -8,19 +8,20 @@ const url = 'mongodb://localhost:27017/quiz';
 const connect = mongoose.connect(url);
 // routes
 const indexRouter = require('./routes/index')
+const userRouter = require('./routes/user')
 
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// app.use(bodyParser.json())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter)
+app.use('/users', userRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

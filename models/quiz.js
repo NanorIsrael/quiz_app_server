@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const UsersSchema = require('./user')
 
 const quizSchema = new Schema({
     
@@ -84,6 +84,10 @@ const quizSchema = new Schema({
             type:String,
             required:true
         },
+        user: [UsersSchema],
+
+},{ 
+    timestamps:true
 })
 
 const QuizQuestions = mongoose.model('QuizQuestions', quizSchema);

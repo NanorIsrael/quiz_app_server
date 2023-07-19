@@ -1,26 +1,18 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const express = require('express');
+const router = express.Router();
+const Users = require('../models/user');
 
 
-const userSchema = new Schema({
-    
-        email:{
-            type:String,
-            required:true
-        },
-        password:{
-            type:String,
-            required:true
-        },
-        first_name:{
-            type:String,
-            required:true
-        },
-        last_name:{
-            type:String,
-            required:true,
-        }
-})
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  res.send('respond with a resource');
+});
 
-const Users = mongoose.model('Users', userSchema);
-module.exports = Users;
+/* Add users. */
+router.get('/signup', function(req, res, next) {
+    console.log(req.body)
+    // Users.use
+    res.send('respond with a resource');
+});
+
+module.exports = router;
