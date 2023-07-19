@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        "prettier",
+        "only-error"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": "warn"
+    },
+    "env": {
+        "node": true
+    }
+}

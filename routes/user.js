@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Users = require('../models/user');
-
+const UserDataSource = require('../controllers/Users');
+const user = new UserDataSource()
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -9,10 +9,49 @@ router.get('/', function(req, res, next) {
 });
 
 /* Add users. */
-router.get('/signup', function(req, res, next) {
-    console.log(req.body)
-    // Users.use
-    res.send('respond with a resource');
+router.post('/signup', async function(req, res, next) {
+    // Todo: input validations
+  const errors = {};
+  if (!req.body.email){
+    errors.email = "email is required"
+  }
+  if (!req.body.last_name){
+    errors.lastname = "lastname is required"
+  }
+  if (!req.body.first_name){
+    errors.firstname = "firstname is required"
+  }
+  if (!req.body.password){
+    errors.password = "password is required"
+  }
+
+  if (Object.keys(errors).length > 0) {
+    res.status(403).json({
+      ok: false,
+      errors
+    });
+  }
+  try {
+      const results = await user.addUser(req.body);
+      console.log(results)
+      if (!results.errors) {
+        res.status(201).json({
+          ok: true,
+          errors: {}
+        })
+      } else {
+        res.status(403).json({
+          ok: false,
+          errors: results.errors
+        });
+      }
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({
+        ok: false,
+        errors: "Something might have gone wrong, Please try again later."
+      })
+    }
 });
 
 module.exports = router;

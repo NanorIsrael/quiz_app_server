@@ -1,5 +1,6 @@
-import  { Users }  from './../controllers/Users';
+import UserDataSource from './../controllers/Users';
 import usersCollection from '../models/user'
+import Auth from '../models/auth'
 
 const mongoose = require('mongoose');
 const url = process.env.MONGO_URI;
@@ -24,7 +25,7 @@ describe("Users", () => {
               last_name: "Tester",
             };
       
-            user = new Users(Maple.email, Maple.first_name, Maple.last_name, Maple.password);
+            user = new UserDataSource(Maple.email, Maple.first_name, Maple.last_name, Maple.password);
           } catch (error) {
             console.error("Error connecting to MongoDB:", error);
           };
@@ -114,6 +115,20 @@ describe("Users", () => {
         const results = await user.login(createdUser.email, tester.password)
 
         expect(createdUser._id).not.toBeNull()
-        expect(results.accessToken).not.toBeNull()
+        expect(results.accessToken).toBeTruthy()
+        expect(Object.keys(results)).toHaveLength(4)
+    })
+  
+    it("can logout user Maple", async () => {
+        const tester =  user.getUser()
+        const createdUser = await user.addUser(tester)
+        const tokens = await user.login(createdUser.email, tester.password)
+        expect(tokens.accessToken).toBeTruthy()
+        expect(Object.keys(tokens)).toHaveLength(4)
+
+        const results = await user.logout(createdUser._id)
+        const authResults = await Auth.findOne({userId: createdUser._id})
+        expect(authResults).toBeNull()
+        expect(results.deletedCount).toEqual(2)
     })
 })

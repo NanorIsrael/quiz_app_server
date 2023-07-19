@@ -2,21 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 const Schema = mongoose.Schema;
 
-const AuthSchema = new Schema({
-    access_token:{
-        type:String,
-        required:true
-    },
-    refresh_token:{
-        type:String,
-        required:true
-    },
-},{
-timestamps:true
-})
-
-const Auth = mongoose.model('Auth', AuthSchema);
-
 const userSchema = new Schema({
     
         email:{
@@ -34,11 +19,7 @@ const userSchema = new Schema({
         last_name:{
             type:String,
             required:true,
-        },
-        auth_details: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Auth'
-        }]
+        }
 }, {
     timestamps:true
 })
