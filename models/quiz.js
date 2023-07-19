@@ -86,7 +86,7 @@ const quizSchema = new Schema({
         },
         user: [UsersSchema],
 
-},{ 
+}, { 
     timestamps:true
 })
 

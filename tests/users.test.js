@@ -1,7 +1,9 @@
 import  { Users }  from './../controllers/Users';
-const mongoose = require('mongoose');
-const url = 'mongodb://localhost:27017/quiz';
 import usersCollection from '../models/user'
+
+const mongoose = require('mongoose');
+const url = process.env.MONGO_URI;
+
 
 describe("Users", () => {
     let Maple;
@@ -19,7 +21,7 @@ describe("Users", () => {
               email: "maple@gvtech.com",
               password: "Mapleme@123",
               first_name: "Maple",
-              last_name: "Lastnameson",
+              last_name: "Tester",
             };
       
             user = new Users(Maple.email, Maple.first_name, Maple.last_name, Maple.password);
@@ -27,12 +29,15 @@ describe("Users", () => {
             console.error("Error connecting to MongoDB:", error);
           };
     })
+
+    beforeEach(async () => {
+        await usersCollection.deleteMany({});
+    })
+
     afterAll(async () => {    
         // Close the Mongoose connection after all tests are done
         await mongoose.disconnect();
-
-        usersCollection.deleteMany({});
-      });
+    });
 
     it("says hello", async () => {
         const hello = 'Hell from quiz app'
@@ -48,6 +53,15 @@ describe("Users", () => {
         expect(createdUser.email).toEqual(tester.email)
         expect(createdUser._id).not.toBeNull()
     })
+
+    it("ensures Maples password is hashed", async () => {
+      const tester = user.getUser();
+      const createdUser = await user.addUser(tester);
+      const userFromDb = await usersCollection.findById(createdUser._id);
+
+      expect(createdUser.password).not.toEqual(tester.password);
+      expect(createdUser.password).toEqual(userFromDb.password);
+    });
 
     it("can find user Maple", async () => {
         const tester =  user.getUser()
@@ -92,5 +106,14 @@ describe("Users", () => {
         expect(createdUser._id).not.toBeNull()
         expect(deletedUser).not.toBeNull()
         expect(deletedUser._id).toEqual(createdUser._id)
+    })
+
+    it("can login user Maple", async () => {
+        const tester =  user.getUser()
+        const createdUser = await user.addUser(tester)
+        const results = await user.login(createdUser.email, tester.password)
+
+        expect(createdUser._id).not.toBeNull()
+        expect(results.accessToken).not.toBeNull()
     })
 })

@@ -1,11 +1,12 @@
+require('dotenv').config();
+
 const express = require("express");
 const path = require('path');
 const createError = require('http-errors');
 const logger = require('morgan');
 
 const mongoose = require('mongoose');
-const url = 'mongodb://localhost:27017/quiz';
-const connect = mongoose.connect(url);
+const connect = mongoose.connect(process.env.MONGO_URI);
 // routes
 const indexRouter = require('./routes/index')
 const userRouter = require('./routes/user')
