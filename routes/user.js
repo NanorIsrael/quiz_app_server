@@ -4,12 +4,12 @@ const UserDataSource = require('../controllers/Users');
 const user = new UserDataSource()
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', function(req, res) {
+  res.send('Hello from quiz app');
 });
 
 /* Add users. */
-router.post('/signup', async function(req, res, next) {
+router.post('/signup', async function(req, res) {
     // Todo: input validations
   const errors = {};
   if (!req.body.email){
@@ -30,13 +30,57 @@ router.post('/signup', async function(req, res, next) {
       ok: false,
       errors
     });
+
+    return;
   }
   try {
       const results = await user.addUser(req.body);
-      console.log(results)
       if (!results.errors) {
         res.status(201).json({
           ok: true,
+          errors: {}
+        })
+      } else {
+        res.status(403).json({
+          ok: false,
+          errors: results.errors
+        });
+      }
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({
+        ok: false,
+        errors: "Something might have gone wrong, Please try again later."
+      })
+    }
+});
+
+/* Add users. */
+router.post('/login', async function(req, res) {
+    // Todo: input validations
+  const errors = {};
+  if (!req.body.email){
+    errors.email = "email is required"
+  }
+  if (!req.body.password){
+    errors.password = "password is required"
+  }
+
+  if (Object.keys(errors).length > 0) {
+    res.status(403).json({
+      ok: false,
+      accessToken: null,
+      errors,
+    });
+  
+    return;
+  }
+  try {
+      const results = await user.login(req.body.email, req.body.password);
+      if (!results.errors) {
+        res.status(201).json({
+          ok: true,
+          accessToken: results.accessToken,
           errors: {}
         })
       } else {
