@@ -2,26 +2,89 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const userSchema = new Schema({
+const quizSchema = new Schema({
     
-        email:{
+        question_1:{
             type:String,
             required:true
         },
-        password:{
+        question_1_answer:{
             type:String,
             required:true
         },
-        first_name:{
+        question_2:{
             type:String,
             required:true
         },
-        last_name:{
+        question_2_answer:{
             type:String,
-            required:true,
-            
-        }
+            required:true
+        },
+        question_3:{
+            type:String,
+            required:true
+        },
+        question_3_answer:{
+            type:String,
+            required:true
+        },
+        question_4:{
+            type:String,
+            required:true
+        },
+        question_4_answer:{
+            type:String,
+            required:true
+        },
+        question_5:{
+            type:String,
+            required:true
+        },
+        question_5_answer:{
+            type:String,
+            required:true
+        },
+        question_6:{
+            type:String,
+            required:true
+        },
+        question_6_answer:{
+            type:String,
+            required:true
+        },
+        question_7:{
+            type:String,
+            required:true
+        },
+        question_7_answer:{
+            type:String,
+            required:true
+        },
+        question_8:{
+            type:String,
+            required:true
+        },
+        question_8_answer:{
+            type:String,
+            required:true
+        },
+        question_9:{
+            type:String,
+            required:true
+        },
+        question_9_answer:{
+            type:String,
+            required:true
+        },
+        question_10:{
+            type:String,
+            required:true
+        },
+        question_10_answer:{
+            type:String,
+            required:true
+        },
 })
 
-const Users = mongoose.model('Users', userSchema);
-module.exports = Users;
+const QuizQuestions = mongoose.model('QuizQuestions', quizSchema);
+module.exports = QuizQuestions;
