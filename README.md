@@ -1,6 +1,9 @@
 # quiz_app_server
 Backend for the quiz application
 
+# How to Run
+- Ensure you have created a .env file use the .envExample file
+- Run npm start
 
 # Backlog
 - Input validations
