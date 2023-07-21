@@ -14,7 +14,6 @@ describe("Quiz questions", () => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
-
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
     }
@@ -59,37 +58,37 @@ describe("Quiz questions", () => {
     expect(Object.keys(quizes.question_options)).toHaveLength(4);
   });
 
-    it("gets all quizes questions", async () => {
-      await generateTestQuizes();
-      const quizes = await QuizDataSource.getAllQuizQuestions();
+  it("gets all quizes questions", async () => {
+    await generateTestQuizes();
+    const quizes = await QuizDataSource.getAllQuizQuestions();
 
-      expect(quizes).toHaveLength(10);
-      expect(quizes[0].question_options).toHaveLength(4);
-    });
+    expect(quizes).toHaveLength(10);
+    expect(quizes[0].question_options).toHaveLength(4);
+  });
 
-    it("processes quiz results", async () => {
-      await generateTestQuizes();
+  it("processes quiz results", async () => {
+    await generateTestQuizes();
 
-      const score = await QuizResultsDataSource.processScore(
-        quizTaker.quizQuestions,
-      );
+    const score = await QuizResultsDataSource.processScore(
+      quizTaker.quizQuestions,
+    );
 
-      await QuizResultsDataSource.processQuizResults(
-        quizTaker.status,
-        score,
-        quizTaker.accountId,
-        quizTaker.quizQuestions,
-      );
-      const queryUserQuizResults = await QuizResultsDataSource.getUserQuizResults(
-        quizTaker.accountId,
-      );
+    await QuizResultsDataSource.processQuizResults(
+      quizTaker.status,
+      score,
+      quizTaker.accountId,
+      quizTaker.quizQuestions,
+    );
+    const queryUserQuizResults = await QuizResultsDataSource.getUserQuizResults(
+      quizTaker.accountId,
+    );
 
-      expect(queryUserQuizResults.userId).toEqual(quizTaker.accountId);
-      expect(queryUserQuizResults.quiz).toHaveLength(
-        quizTaker.quizQuestions.length,
-      );
-      expect(queryUserQuizResults.score).toEqual(10);
-    });
+    expect(queryUserQuizResults.userId).toEqual(quizTaker.accountId);
+    expect(queryUserQuizResults.quiz).toHaveLength(
+      quizTaker.quizQuestions.length,
+    );
+    expect(queryUserQuizResults.score).toEqual(10);
+  });
 });
 
 const generateTestQuizes = async () => {
@@ -154,4 +153,4 @@ const generateTestQuizes = async () => {
   for (let question of quizQuestionsDB) {
     await quiz.create(question);
   }
-}
+};

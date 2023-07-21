@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const createError = require("http-errors");
-const cors = require('./middlewares/cors')
+const cors = require("./middlewares/cors");
 const logger = require("morgan");
 
 const mongoose = require("mongoose");
@@ -22,8 +22,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.options('*', cors.corsWithOptions)
-app.use(cors.corsWithOptions)
+app.options("*", cors.corsWithOptions);
+app.use(cors.corsWithOptions);
 
 app.use("/", indexRouter);
 app.use("/users", userRouter);

@@ -20,14 +20,13 @@ describe("Users", () => {
       Maple = {
         email: "maple@gvtech.com",
         password: "Mapleme@123",
-        first_name: "Maple",
+        username: "Maple",
         last_name: "Tester",
       };
 
       user = new UserDataSource(
         Maple.email,
-        Maple.first_name,
-        Maple.last_name,
+        Maple.username,
         Maple.password,
       );
     } catch (error) {
@@ -40,6 +39,8 @@ describe("Users", () => {
   });
 
   afterAll(async () => {
+    await usersCollection.collection.drop();
+
     // Close the Mongoose connection after all tests are done
     await mongoose.disconnect();
   });
@@ -53,8 +54,7 @@ describe("Users", () => {
     const tester = user.getUser();
     const createdUser = await user.addUser(tester);
 
-    expect(createdUser.first_name).toEqual(tester.first_name);
-    expect(createdUser.last_name).toEqual(tester.last_name);
+    expect(createdUser.username).toEqual(tester.username);
     expect(createdUser.email).toEqual(tester.email);
     expect(createdUser._id).not.toBeNull();
   });

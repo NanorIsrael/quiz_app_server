@@ -10,33 +10,32 @@ router.get("/", function (req, res) {
 });
 
 /* Add users. */
-router.post("/signup", async function (req, res) {
+router.post("/signup", async function (req, res, next) {
   // Todo: input validations
   const errors = {};
   if (!req.body.email) {
     errors.email = "email is required";
   }
-  if (!req.body.last_name) {
+  if (!req.body.username) {
     errors.lastname = "lastname is required";
   }
-  if (!req.body.first_name) {
-    errors.firstname = "firstname is required";
-  }
+  
   if (!req.body.password) {
     errors.password = "password is required";
   }
 
   if (Object.keys(errors).length > 0) {
-    res.status(403).json({
-      ok: false,
-      errors,
-    });
-
-    return;
+      return res.status(403).json({
+        ok: false,
+        errors,
+      });
   }
+
   try {
-    const results = await user.addUser(req.body);
-    if (!results.errors) {
+    const userData = req.body
+    const result = await user.addUser(userData);
+
+    if (!result.errors) {
       res.status(201).json({
         ok: true,
         errors: {},
@@ -44,14 +43,14 @@ router.post("/signup", async function (req, res) {
     } else {
       res.status(403).json({
         ok: false,
-        errors: results.errors,
+        errors: result.errors,
       });
     }
   } catch (err) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      errors: "Something might have gone wrong, Please try again later.",
+      errors: {error: "Something might have gone wrong, Please try again later."},
     });
   }
 });
@@ -94,7 +93,9 @@ router.post("/login", async function (req, res) {
     console.log(err);
     res.status(500).json({
       ok: false,
-      errors: "Something might have gone wrong, Please try again later.",
+      errors: {
+        error: "Something might have gone wrong, Please try again later."
+      },
     });
   }
 });
@@ -107,6 +108,33 @@ router.delete("/logout", verifyUser, async function (req, res) {
     if (!results.errors) {
       res.status(201).json({
         ok: true,
+        errors: {},
+      });
+    } else {
+      res.status(403).json({
+        ok: false,
+        errors: results.errors,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      ok: false,
+      errors: "Something might have gone wrong, Please try again later.",
+    });
+  }
+});
+
+/* GET users listing. */
+router.get("/me", verifyUser, async function (req, res) {
+  try {
+    const userResults = await user.getUserById(req.accountId);
+    if (!results.errors) {
+      res.status(201).json({
+        ok: true,
+        user: {
+          username: userResults.username
+        },
         errors: {},
       });
     } else {

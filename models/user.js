@@ -12,14 +12,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    first_name: {
+    username: {
       type: String,
       required: true,
-    },
-    last_name: {
-      type: String,
-      required: true,
-    },
+    }
   },
   {
     timestamps: true,
@@ -27,7 +23,7 @@ const userSchema = new Schema(
 );
 
 // Pre middleware to hash the password before saving the user
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
   const user = this;
 
   // Check if the password is modified or it's a new user

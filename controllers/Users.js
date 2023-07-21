@@ -6,21 +6,18 @@ const { generateAuthTokens } = require("./../services/tokenService");
 class UserDataSource {
   constructor(
     email = null,
-    firstname = null,
-    lastname = null,
+    username = null,
     password = null,
   ) {
     (this.email = email),
-      (this.firstname = firstname),
-      (this.lastname = lastname);
+      (this.username = username),
     this.password = password;
   }
 
   getUser() {
     return {
       email: this.email,
-      first_name: this.firstname,
-      last_name: this.lastname,
+      username: this.username,
       password: this.password,
     };
   }
@@ -31,11 +28,12 @@ class UserDataSource {
       if (ensureUserExits) {
         return {
           errors: {
-            error: "email already taken try login with your password.",
+            error: "email already taken, try login with your password.",
           },
         };
       }
-      return User.create(user);
+      
+      return await User.create(user);
     } catch (error) {
       return {
         errors: {
