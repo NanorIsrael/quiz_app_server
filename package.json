@@ -9,7 +9,7 @@
     "test-handles": "jest --detectOpenHandles",
     "lint": "eslint --fix --ext .js,.ts --ignore-path .gitignore .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts)\"",
-    "generate-quiz-questions": "node scripts/generate-quiz-questions"
+    "generate-quiz-questions": "node --trace-warnings scripts/generate-quiz-questions"
   },
   "keywords": [],
   "author": "",

@@ -1,7 +1,21 @@
+require("dotenv").config();
+
 const  { exit } = require('process');
 const quiz = require('../models/quiz')
+const mongoose = require("mongoose");
+const url = process.env.MONGO_URI;
 
 async function generateTestQuizes() {
+    try {
+        await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+          });
+    } catch(error) {
+        console.error("Error connecting to MongoDB:", error);
+    }
+   
+
     const quizQuestionsDB = [
         {
           question: "Which of the following is the capital of Ghana?",
@@ -68,6 +82,11 @@ async function generateTestQuizes() {
     } catch(error) {
         console.log(error)
     }
+
+    setInterval(async () => {
+        await mongoose.disconnect();
+
+    }, 10000)
 }
 
 generateTestQuizes()
