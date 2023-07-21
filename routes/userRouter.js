@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {verifyUser} = require('../middlewares/auth')
+const { verifyUser } = require("../middlewares/auth");
 const UserDataSource = require("../controllers/Users");
 const user = new UserDataSource();
 
@@ -102,7 +102,6 @@ router.post("/login", async function (req, res) {
 /* Log user out. */
 router.delete("/logout", verifyUser, async function (req, res) {
   // Todo: add cookies implementation using redis
-  console.log(req.body);
   try {
     const results = await user.logout(req.accountId);
     if (!results.errors) {

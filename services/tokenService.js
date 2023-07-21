@@ -59,9 +59,9 @@ async function generateAuthTokens(accountId) {
 
 async function verifyToken(token, type) {
   const payload = jwt.verify(token, process.env.JWT_SECRET);
-    if (!payload) {
-        return ("")
-    }
+  if (!payload) {
+    return "";
+  }
   if (payload.type === type) {
     const tokenRow = await Auth.findOne({
       userId: payload.userId,
