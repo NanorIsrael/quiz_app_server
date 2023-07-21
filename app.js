@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const createError = require("http-errors");
+const cors = require('./middlewares/cors')
 const logger = require("morgan");
 
 const mongoose = require("mongoose");
@@ -10,6 +11,7 @@ const connect = mongoose.connect(process.env.MONGO_URI);
 // routes
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/userRouter");
+const quizRouter = require("./routes/quizRouter");
 
 const app = express();
 // view engine setup
@@ -20,9 +22,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.options('*', cors.corsWithOptions)
+app.use(cors.corsWithOptions)
 
 app.use("/", indexRouter);
 app.use("/users", userRouter);
+app.use("/quiz", quizRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
