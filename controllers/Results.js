@@ -11,10 +11,10 @@ class QuizResultsImpl extends QuizImpl {
 
     for (let q of quizQuestions) {
       const getAnsweredQuestion = await this.getQuizQuestion({
-        question_number: q.question_number,
+        question_number: q.questionNumber,
       });
 
-      if (q.selected_answer === getAnsweredQuestion.question_answer) {
+      if (q.selectedAnswer === getAnsweredQuestion.question_answer) {
         score += 10;
       }
     }
@@ -37,8 +37,8 @@ class QuizResultsImpl extends QuizImpl {
 
       quizQuestions.forEach((question) => {
         result.quiz.push({
-          question_number: question.question_number,
-          selected_answer: question.selected_answer,
+          question_number: question.questionNumber,
+          selected_answer: question.selectedAnswer,
         });
       });
 

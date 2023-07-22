@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { verifyUser } = require("../middlewares/auth");
 const { QuizDataSource } = require("../controllers/Quiz");
-const {QuizResultsDataSource} = require("../controllers/Results");
+const { QuizResultsDataSource } = require("../controllers/Results");
 // const quiz = new UserDataSource();
 
 /* GET quizes listing. */
@@ -25,8 +25,43 @@ router.get("/", async function (req, res) {
   }
 });
 
+/* GET quizes scores. */
+router.post("/", verifyUser, async function (req, res) {
+  try {
+    const quizTaker = {
+      quizQuestions: req.body.quizQuestions,
+      status: req.body.status,
+      accountId: req.body.accountId,
+    };
+    const score = await QuizResultsDataSource.processScore(
+      quizTaker.quizQuestions,
+    );
+
+    await QuizResultsDataSource.processQuizResults(
+      quizTaker.status,
+      score,
+      quizTaker.accountId,
+      quizTaker.quizQuestions,
+    );
+
+    res.status(200).json({
+      ok: true,
+      score,
+      errors: {},
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      errors: {
+        error: "Something might have gone wrong, Please try again later.",
+      },
+    });
+  }
+});
+
 /* GET quiz by number. */
-router.get("/question", async function (req, res) {
+router.get("/question", verifyUser, async function (req, res) {
   let questionNumber = 1;
 
   if (JSON.parse(req.query.index)) {
@@ -67,37 +102,6 @@ router.get("/question", async function (req, res) {
         currentIndex: questionNumber,
         totalNumber: allQuizQuestions.length,
       },
-      errors: {},
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      ok: false,
-      errors: {
-        error: "Something might have gone wrong, Please try again later.",
-      },
-    });
-  }
-});
-
-/* GET quizes listing. */
-router.post("/question/number", async function (req, res) {
-  try {
-    
-    const score = await QuizResultsDataSource.processScore(
-      quizTaker.quizQuestions,
-    );
-
-    await QuizResultsDataSource.processQuizResults(
-      quizTaker.status,
-      score,
-      quizTaker.accountId,
-      quizTaker.quizQuestions,
-    );
-    
-    res.status(200).json({
-      ok: true,
-      quizQuestions,
       errors: {},
     });
   } catch (error) {

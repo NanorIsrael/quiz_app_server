@@ -1,6 +1,7 @@
 import UserDataSource from "./../controllers/Users";
 import usersCollection from "../models/user";
 import Auth from "../models/auth";
+import tokenTypes from "../services/token";
 
 const mongoose = require("mongoose");
 const url = process.env.MONGO_URI;
@@ -24,11 +25,7 @@ describe("Users", () => {
         last_name: "Tester",
       };
 
-      user = new UserDataSource(
-        Maple.email,
-        Maple.username,
-        Maple.password,
-      );
+      user = new UserDataSource(Maple.email, Maple.username, Maple.password);
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
     }
@@ -119,6 +116,20 @@ describe("Users", () => {
 
     expect(createdUser._id).not.toBeNull();
     expect(results.accessToken).toBeTruthy();
+    expect(Object.keys(results)).toHaveLength(4);
+  });
+
+  it("ensures user tokens were saved", async () => {
+    const tester = user.getUser();
+    const createdUser = await user.addUser(tester);
+    const results = await user.login(createdUser.email, tester.password);
+
+    expect(createdUser._id).not.toBeNull();
+    expect(results.accessToken).toBeTruthy();
+    const tokenDetails = await Auth.findOne({ token: results.accessToken });
+
+    expect(results.accessToken).toEqual(tokenDetails.token);
+    expect(tokenDetails.type).toEqual(tokenTypes.ACCESS);
     expect(Object.keys(results)).toHaveLength(4);
   });
 

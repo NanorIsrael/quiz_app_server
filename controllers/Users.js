@@ -4,14 +4,10 @@ const bcrypt = require("bcrypt");
 const { generateAuthTokens } = require("./../services/tokenService");
 
 class UserDataSource {
-  constructor(
-    email = null,
-    username = null,
-    password = null,
-  ) {
+  constructor(email = null, username = null, password = null) {
     (this.email = email),
       (this.username = username),
-    this.password = password;
+      (this.password = password);
   }
 
   getUser() {
@@ -32,7 +28,7 @@ class UserDataSource {
           },
         };
       }
-      
+
       return await User.create(user);
     } catch (error) {
       return {
@@ -44,19 +40,19 @@ class UserDataSource {
   }
 
   async getUserById(userId) {
-    return User.findById(userId);
+    return await User.findById(userId);
   }
 
   async getUserByEmail(email) {
-    return User.findOne({ email });
+    return await User.findOne({ email });
   }
 
   async updateUserById(userId) {
-    return User.findByIdAndUpdate(userId);
+    return await User.findByIdAndUpdate(userId);
   }
 
   async deleteUser(userId) {
-    return User.findByIdAndDelete(userId);
+    return await User.findByIdAndDelete(userId);
   }
 
   async login(email, password) {
@@ -68,10 +64,9 @@ class UserDataSource {
         },
       };
     }
-
     // Hash the password using bcrypt
     try {
-      // Compare the password using bcrypt
+      // Compare the passddword using bcrypt
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
         const tokens = await generateAuthTokens(user._id);

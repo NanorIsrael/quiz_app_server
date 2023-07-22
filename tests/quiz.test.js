@@ -21,17 +21,17 @@ describe("Quiz questions", () => {
     quizTaker = {
       quizQuestions: [
         {
-          question_number: 1,
+          questionNumber: 1,
           question: "Which of the following is the capital of Ghana.",
           question_options: ["Temale", "Kumasi", "Accra", "None of the above"],
           question_answer: "Accra",
-          selected_answer: "Kumasi",
+          selectedAnswer: "Kumasi",
         },
         {
-          question_number: 2,
+          questionNumber: 2,
           question: "In which year did Ghana became independent.",
           question_options: ["1997", "19957", "1967", "None of the above"],
-          selected_answer: "1957",
+          selectedAnswer: "1957",
         },
       ],
       accountId: new mongoose.Types.ObjectId(),

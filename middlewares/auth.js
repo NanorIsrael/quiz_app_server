@@ -16,6 +16,7 @@ async function verifyUser(req, res, next) {
 
     if (tokenParts[0] === "Bearer" && tokenParts[1].match(/\S*\.\S*\.\S*/)) {
       const tokenData = await verifyToken(tokenParts[1], tokenTypes.ACCESS);
+      // if (tokenData)
       const userId = tokenData["userId"].toString();
 
       const user = await UserDataSource.findById(userId);
@@ -29,7 +30,7 @@ async function verifyUser(req, res, next) {
         });
       }
 
-      req.body.accountId = user.id;
+      req.body.accountId = user._id;
 
       next();
     } else {
@@ -41,7 +42,13 @@ async function verifyUser(req, res, next) {
       });
     }
   } catch (error) {
-    console.log(error);
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        errors: {
+          error: "Oops! An Error occurred. token expired.",
+        },
+      });
+    }
     return res.status(error.code || 500).json({
       ok: false,
       errors: {

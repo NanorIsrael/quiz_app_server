@@ -15,7 +15,7 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
@@ -30,14 +30,14 @@ userSchema.pre("save", async function (next) {
   if (!user.isModified("password")) {
     return next();
   }
-  bcrypt.hash(
+  const hashedPassword = await bcrypt.hash(
     user.password,
     Number(process.env.BCRYPT_ITERATIONS_COST),
-    (err, hashedPassword) => {
-      user.password = hashedPassword;
-      next();
-    },
   );
+  if (hashedPassword) {
+    user.password = hashedPassword;
+  }
+  next();
 });
 
 const Users = mongoose.model("Users", userSchema);

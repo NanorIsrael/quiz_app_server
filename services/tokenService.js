@@ -17,8 +17,7 @@ function generateToken(userId, expires, type) {
 async function saveToken(token, userId, expires, type) {
   const tokenData = { token, type, expires, userId };
 
-  const auth = new Auth(tokenData);
-  await auth.save();
+  await Auth.create(tokenData);
 }
 
 async function generateAuthTokens(accountId) {

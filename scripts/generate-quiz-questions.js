@@ -3,6 +3,8 @@ require("dotenv").config();
 const { exit } = require("process");
 const quiz = require("../models/quiz");
 const user = require("../models/user");
+const quizResults = require("../models/quiz_results");
+const auth = require("../models/auth");
 const mongoose = require("mongoose");
 const url = process.env.MONGO_URI;
 
@@ -24,13 +26,13 @@ async function generateTestQuizes() {
     },
     {
       question: "In which year did Ghana became independent?",
-      question_options: ["1997", "19957", "1967", "None of the above"],
+      question_options: ["1997", "1957", "1967", "None of the above"],
       question_answer: "1957",
     },
     {
       question: "Who was the Ancient Greek God of the Sun?",
       question_options: ["Olympus", "Apollo", "Eris", "None of the above"],
-      question_answer: "e",
+      question_answer: "Apollo",
     },
     {
       question: "Aureolin is a shade of what color?",
@@ -77,9 +79,10 @@ async function generateTestQuizes() {
   try {
     await user.collection.drop();
     await quiz.collection.drop();
+    await auth.collection.drop();
+    await quizResults.collection.drop();
 
     for (let question of quizQuestionsDB) {
-      console.log("adding question ---", question);
       await quiz.create(question);
     }
   } catch (error) {
